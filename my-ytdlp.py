@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(
                     usage="my-ytdlp URL [-a] [-d DIR]"
 )
 
-parser.add_argument('url', metavar="URL",
+parser.add_argument('url', metavar="URL", nargs='+',
                     help='youtube url')
 parser.add_argument('-a', "--mp3", action='store_true', default=False,
                     help='flag to download audio file.')
@@ -24,7 +24,7 @@ parser.add_argument('-v','--version', action='version', version='%(prog)s v1.0')
 
 args = parser.parse_args()
 
-ytdlp = ["yt-dlp", args.url, "--add-metadata", "-P", args.dir]
+ytdlp = ["yt-dlp", *args.url, "--add-metadata", "-P", args.dir]
 if args.mp3:
     ytdlp.extend(["--extract-audio", "--audio-format", "mp3", "--audio-quality", "3", "--embed-thumbnail"])
 else:
