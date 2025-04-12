@@ -46,7 +46,7 @@ parser.add_argument('-v','--version', action='version', version='%(prog)s v1.0')
 
 args = parser.parse_args()
 
-ytdlp = ["yt-dlp", *args.url, "--add-metadata", "-P", args.path, "--format", "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]"]
+ytdlp = ["yt-dlp", *args.url, "--add-metadata", "-P", args.path, "--format", "bestvideo+bestaudio"]
 
 if args.trim:
     ytdlp.extend(["--download-sections", f"*{args.trim}", "-S", "proto:https"])
