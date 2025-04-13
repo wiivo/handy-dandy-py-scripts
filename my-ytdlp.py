@@ -38,6 +38,8 @@ parser.add_argument('url', metavar="URL", nargs='+',
                     help='youtube url')
 parser.add_argument('-a', "--mp3", action='store_true', default=False,
                     help='flag to download audio file')
+parser.add_argument("--force-h264", action='store_true', default=False,
+                    help='flag to force convert to H.264')
 parser.add_argument('-p', "--path", type=dir_path, default=os.getcwd(),
                     help='set path')
 parser.add_argument('-t' ,'--trim', type=timestamp, default=timestamp(), metavar='TIMESTAMP',
@@ -48,10 +50,17 @@ args = parser.parse_args()
 
 ytdlp = ["yt-dlp", *args.url, "--add-metadata", "-P", args.path, "--format", "bestvideo+bestaudio"]
 
+if args.force_h264:
+    ytdlp.extend(["--exec", "ffmpeg -i {} -c:v libx264 -c:a copy -preset ultrafast {}_HEVC.mp4",
+         "--exec", "del {}" if sys.platform == "win32" else "rm {}"])
+
 if args.trim:
     ytdlp.extend(["--download-sections", f"*{args.trim}", "-S", "proto:https"])
 
 if args.mp3:
+    if args.force_h264:
+       print("\033[91mERROR:\033[0m Invalid arguments: force-h264 and mp3")
+       sys.exit(1)
     ytdlp.extend(["--extract-audio", "--audio-format", "mp3", "--audio-quality", "3", "--embed-thumbnail"])
 
 try:
