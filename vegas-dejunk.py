@@ -26,9 +26,10 @@ dir_list = os.listdir(args.path)
 
 for file in dir_list:
     file_path = os.path.join(args.path, file)
-    if os.path.isfile(file_path) and re.search(r'\.sfk\d?$', file) and (file[:-5] not in dir_list or args.all):
-        if (args.dry == False):
-            os.remove(file_path)
-        print(file + " deleted")
+    if os.path.isfile(file_path):
+        if (re.search(r'\.sfk\d?$', file) and (file[:-5] not in dir_list or args.all)) or (re.search(r'\.veg.bak$', file) and (file[:-4] not in dir_list or args.all)):
+            if (args.dry == False):
+                os.remove(file_path)
+            print(file + " deleted")
 
 print("All clear!")
