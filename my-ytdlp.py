@@ -36,7 +36,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('url', metavar="URL", nargs='+',
                     help='youtube url')
-parser.add_argument('-a', "--mp3", action='store_true', default=False,
+parser.add_argument('-a', "--audio", action='store_true', default=False,
                     help='flag to download audio file')
 parser.add_argument('-m', "--metadata", action='store_true', default=False,
                     help='flag to embed metadata and thumbnail')
@@ -52,14 +52,18 @@ args = parser.parse_args()
 
 ytdlp = ["yt-dlp", *args.url, "-P", args.path, "--format", "bestvideo+bestaudio"]
 
-if args.force_h264 and not args.mp3:
-    ytdlp.extend(["--exec", "ffmpeg -i {} -c:v libx264 -c:a copy -preset ultrafast {}_AVC.mp4",
+if args.force_h264:
+    if not args.audio:
+        ytdlp.extend(["--exec", "ffmpeg -i {} -c:v libx264 -c:a aac -strict -2 {}_AVC.mp4",
+         "--exec", "del {}" if sys.platform == "win32" else "rm {}"])
+    else:
+        ytdlp.extend(["--exec", "ffmpeg -i {} -vn -ar 44100 -ac 2 -b:a 192k {}_AVC.mp3",
          "--exec", "del {}" if sys.platform == "win32" else "rm {}"])
 
 if args.trim:
     ytdlp.extend(["--download-sections", f"*{args.trim}", "-S", "proto:https"])
 
-if args.mp3:
+if args.audio:
     ytdlp.extend(["--extract-audio", "--audio-format", "mp3", "--audio-quality", "3"])
 
 if args.metadata:
