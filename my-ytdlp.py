@@ -30,7 +30,6 @@ for i in range(len(sys.argv)):
 parser = argparse.ArgumentParser(
                     prog='my-ytdlp',
                     description='Custom simplified ytdlp script',
-                    usage="my-ytdlp URL [-a] [-m] [-p PATH] [-t TIMESTAMP] [--force-h264]",
                     formatter_class=argparse.RawTextHelpFormatter
 )
 

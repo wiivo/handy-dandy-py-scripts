@@ -8,8 +8,7 @@ def dir_path(path):
 
 parser = argparse.ArgumentParser(
                     prog='vegas-dejunk',
-                    description='Delete sfk files of nonexisting (or all) videos in a directory',
-                    usage="vegas-dejunk [-p PATH] [-d]"
+                    description='Delete sfk files of nonexisting (or all) videos in a directory'
 )
 
 parser.add_argument('-d', "--dry", action='store_true', default=False,
