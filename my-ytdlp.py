@@ -41,6 +41,8 @@ parser.add_argument('-m', "--metadata", action='store_true', default=False,
                     help='flag to embed metadata and thumbnail')
 parser.add_argument('-f',"--force-h264", action='store_true', default=False,
                     help='flag to force convert to H.264')
+parser.add_argument('-i',"--items", type=str,
+                    help="items to download, for example '1:3,7,-5::2' on a playlist of size 15 will download 1,2,3,7,11,13,15")
 parser.add_argument('-p', "--path", type=dir_path, default=os.getcwd(),
                     help='set path')
 parser.add_argument('-t' ,'--trim', type=timestamp, default=timestamp(), metavar='TIMESTAMP',
@@ -58,6 +60,9 @@ if args.force_h264:
     else:
         ytdlp.extend(["--exec", "ffmpeg -i {} -vn -ar 44100 -ac 2 -b:a 192k {}_AVC.mp3",
          "--exec", "del {}" if sys.platform == "win32" else "rm {}"])
+
+if args.items:
+    ytdlp.extend(["-I", args.items])
 
 if args.trim:
     ytdlp.extend(["--download-sections", f"*{args.trim}", "-S", "proto:https"])
